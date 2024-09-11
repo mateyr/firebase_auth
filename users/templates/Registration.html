@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sign Up</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+      }
+
+      form {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 24px;
+        color: #333;
+      }
+
+      p {
+        color: #666;
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      input[type="name"],
+      input[type="email"],
+      input[type="password"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      input[type="submit"],
+      button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        margin-right: 10px;
+      }
+
+      input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+
+      button {
+        background-color: #6c757d;
+        color: #fff;
+      }
+
+      button:hover {
+        background-color: #5a6268;
+      }
+
+      .social-login {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+
+      .social-login a {
+        display: inline-block;
+        text-align: center;
+        padding: 10px 0;
+        width: 100%;
+        margin-right: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+
+      .social-login a:hover {
+        background-color: #e0e0e0;
+      }
+
+      .social-login img {
+        width: 20px;
+        vertical-align: middle;
+        margin-right: 8px;
+      }
+
+      .social-login a:last-child {
+        margin-right: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="/postsignUp/" method="post">
+      {% csrf_token %}
+      <h1>Sign Up</h1>
+      <p>Please fill in this form</p>
+
+      <!-- Username: -->
+      <label for="username">Username</label>
+      <input
+        type="name"
+        id="username"
+        name="name"
+        placeholder="Your Name"
+      /><br /><br />
+
+      <!-- Email: -->
+      <label for="Email">Email</label>
+      <input
+        type="email"
+        id="Email"
+        name="email"
+        placeholder="Your Email Id"
+      /><br /><br />
+
+      <!-- Password: -->
+      <label for="Password">Password</label>
+      <input
+        type="password"
+        id="Password"
+        name="pass"
+        placeholder="Password"
+      /><br /><br />
+
+      <!-- Repeat Password: -->
+      <label for="confirm_password">Confirm Password</label>
+      <input
+        type="password"
+        id="confirm_password"
+        name="pass-repeat"
+        placeholder="Repeat Password"
+      /><br /><br />
+
+      <div>
+        <input type="submit" value="Sign Up" />
+        <button type="button" onclick="location.href='{% url 'signin' %}'">
+          Sign In
+        </button>
+      </div>
+
+      <!-- Social Login Buttons -->
+      <div class="social-login">
+        <a href="#" id="google-signin">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/281/281764.png"
+            alt="Google Logo"
+          />
+        </a>
+        <a href="#">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/145/145802.png"
+            alt="Facebook Logo"
+          />
+        </a>
+        <a href="#">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/733/733609.png"
+            alt="GitHub Logo"
+          />
+        </a>
+      </div>
+    </form>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDODdAaKjeUDaLsfm-t-nFLBFFEPYjo44Y",
+        authDomain: "autentificacion-de-animales.firebaseapp.com",
+        projectId: "autentificacion-de-animales",
+        storageBucket: "autentificacion-de-animales.appspot.com",
+        messagingSenderId: "135378187853",
+        appId: "1:135378187853:web:955a63790002c3fb4a4e04",
+        measurementId: "G-L13XR3G9LB",
+      };
+
+      const app = initializeApp(firebaseConfig);
+
+      import {
+        getAuth,
+        signInWithPopup,
+        GoogleAuthProvider,
+      } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+      const auth = getAuth();
+      const provider = new GoogleAuthProvider();
+
+      document.getElementById("google-signin").addEventListener("click", () => {
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // The signed-in user info.
+            const user = result.user;
+            // IdP data available using getAdditionalUserInfo(result)
+            // ...
+          })
+          .catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.customData.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+            console.log(errorCode);
+            console.log(error.message);
+            // ...
+          });
+      });
+    </script>
+  </body>
+</html>
